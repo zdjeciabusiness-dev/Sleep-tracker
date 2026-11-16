@@ -1,0 +1,26 @@
+SLEEP TRACKER — INSTALACJA NA ANDROIDZIE
+
+W paczce są pliki aplikacji PWA. Aby dodać ją na ekran główny, trzeba najpierw opublikować pliki pod adresem HTTPS.
+
+NAJPROSTSZA OPCJA: GITHUB PAGES (bezpłatnie)
+1. Zaloguj się lub utwórz konto na https://github.com
+2. Utwórz nowe repozytorium, np. sleep-tracker. Ustaw je jako Public.
+3. W repozytorium wybierz Add file → Upload files.
+4. Wgraj CAŁĄ zawartość tego folderu (index.html, manifest.webmanifest, sw.js oraz folder icons).
+5. Zatwierdź przyciskiem Commit changes.
+6. Wejdź w Settings → Pages.
+7. W sekcji Build and deployment wybierz Deploy from a branch.
+8. Wybierz branch main oraz folder /(root), następnie Save.
+9. Po chwili GitHub pokaże adres strony. Otwórz go na Androidzie w Chrome.
+
+DODANIE IKONY NA ANDROIDZIE
+1. Otwórz opublikowany adres w Google Chrome.
+2. Otwórz menu ⋮.
+3. Wybierz „Zainstaluj aplikację” lub „Dodaj do ekranu głównego”.
+4. Potwierdź. Ikona Sleep Tracker pojawi się na ekranie.
+
+WAŻNE O DANYCH
+Pomiary zapisują się lokalnie w pamięci przeglądarki/aplikacji na tym urządzeniu. Nie czyść danych aplikacji ani pamięci witryny, jeśli chcesz zachować historię. W zakładce Statistics używaj Export backup (JSON), aby robić kopie zapasowe. Przy przenoszeniu na inne urządzenie zainstaluj aplikację i użyj Import backup.
+
+UWAGA
+Nie otwieraj index.html bezpośrednio z folderu Pobrane, jeśli chcesz instalować PWA. Instalacja wymaga opublikowania aplikacji przez HTTPS (np. GitHub Pages).

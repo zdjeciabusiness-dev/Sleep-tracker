@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102b4e">
+<meta name="description" content="Twój osobisty monitor wieczornej rutyny i pory snu.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<title>Sleep Tracker</title>
+<style>
+:root{--navy:#102b4e;--blue:#2878c8;--pale:#edf5fc;--line:#dce8f3;--muted:#71839a;--green:#159653;--orange:#db8518;--red:#d64545}
+*{box-sizing:border-box}body{margin:0;background:#f4f8fc;color:#17324f;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+.app{max-width:1120px;margin:auto;padding:28px 22px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:25px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:var(--navy);color:white;display:grid;place-items:center;font-size:22px}
+h1{font-size:23px;margin:0;color:var(--navy);letter-spacing:-.5px}.sub{font-size:12px;color:var(--muted);margin-top:3px;letter-spacing:1.2px}
+.pill{background:#e4f1fd;color:#246eb4;border-radius:30px;padding:8px 13px;font-size:12px;font-weight:700}
+nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px}.tab{border:1px solid var(--line);background:white;color:#526981;border-radius:10px;padding:10px 16px;cursor:pointer;font-weight:650}.tab.active{background:var(--navy);color:white;border-color:var(--navy)}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:0 5px 22px #1b4a7010}
+.panel h2{font-size:17px;margin:0 0 6px;color:var(--navy)}.muted{color:var(--muted);font-size:13px}
+.datehead{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.datehead h2{font-size:21px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.metric{background:#f5f9fd;border:1px solid #e6eef6;border-radius:13px;padding:15px}.metric label{display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.7px}.metric strong{display:block;font-size:25px;color:var(--navy);margin-top:5px;font-variant-numeric:tabular-nums}
+.timeline{position:relative;margin:24px 4px 18px;padding:0 0 0 23px;border-left:3px solid #dce8f3}.event{position:relative;padding:0 0 26px 16px}.event:last-child{padding-bottom:3px}.dot{position:absolute;left:-31px;top:3px;width:14px;height:14px;border-radius:50%;background:white;border:3px solid var(--blue)}.event.actual .dot{background:var(--navy);border-color:var(--navy)}
+.event .time{font-size:20px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}.event .name{font-size:13px;font-weight:700;margin-top:3px}.event .detail{font-size:12px;color:var(--muted);margin-top:3px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.action{border:0;border-radius:12px;padding:15px 12px;background:var(--navy);color:white;font-weight:750;cursor:pointer;font-size:13px}.action.secondary{background:var(--blue)}.action:disabled{opacity:.42;cursor:not-allowed}
+.notice{padding:13px 15px;border-radius:12px;font-weight:800;font-size:13px;margin-top:14px}.green{background:#e7f7ee;color:#117a43}.orange{background:#fff3df;color:#a96008}.red{background:#ffebeb;color:#b52d2d}.neutral{background:#eef4fa;color:#46617d}
+.smallbtn{border:1px solid var(--line);background:white;color:#3c5c7a;border-radius:9px;padding:9px 12px;cursor:pointer;font-weight:650;font-size:12px}.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,input[type=month]{border:1px solid var(--line);border-radius:9px;padding:9px 11px;color:var(--navy);background:white;font:inherit}
+table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:var(--muted);font-size:10px;letter-spacing:.7px;padding:12px 9px;border-bottom:1px solid var(--line)}td{padding:13px 9px;border-bottom:1px solid #edf2f7;font-variant-numeric:tabular-nums}tr:last-child td{border-bottom:0}.status{font-size:10px;font-weight:800;letter-spacing:.3px}.status.green{background:#e7f7ee;color:#117a43}.status.orange{background:#fff3df;color:#a96008}.status.red{background:#ffebeb;color:#b52d2d}.status.neutral{background:#eef4fa;color:#46617d}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{border:1px solid var(--line);border-radius:13px;padding:16px}.stat strong{display:block;font-size:27px;color:var(--navy);margin:8px 0 2px}.stat span{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:15px}.calday{padding:9px 2px;text-align:center;border-radius:9px;background:#f4f8fc;min-height:55px;font-size:12px}.calday.head{background:white;color:var(--muted);font-weight:800;min-height:auto}.calday .mark{display:block;margin:5px auto 0;width:8px;height:8px;border-radius:50%;background:#cbd8e5}.calday .mark.green{background:var(--green)}.calday .mark.orange{background:var(--orange)}.calday .mark.red{background:var(--red)}
+.empty{padding:25px;text-align:center;color:var(--muted);font-size:13px}.footer{font-size:11px;color:#8a9aae;text-align:center;margin-top:25px}
+@media(max-width:650px){.app{padding:18px 13px 40px}.panel{padding:17px}.metrics,.stats{grid-template-columns:1fr 1fr}.metrics .metric:last-child{grid-column:span 2}.actions{grid-template-columns:1fr}.tablewrap{overflow-x:auto}table{min-width:620px}.datehead h2{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="brand"><div class="logo">☾</div><div><h1>SLEEP TRACKER</h1><div class="sub">YOUR NIGHTLY ROUTINE</div></div></div>
+ <div class="pill">SUN — THU</div>
+</header>
+<nav>
+ <button class="tab active" data-tab="today">Today</button>
+ <button class="tab" data-tab="calendar">Calendar</button>
+ <button class="tab" data-tab="history">Monthly history</button>
+ <button class="tab" data-tab="stats">Statistics</button>
+</nav>
+<main id="content"></main>
+<div class="footer">SLEEP TRACKER · Dane zapisywane lokalnie w tej przeglądarce</div>
+</div>
+<script>
+const PREP_PLAN="20:45", BED_PLAN="21:30";
+const STORE="sleepTracker_v1";
+let records=JSON.parse(localStorage.getItem(STORE)||"{}");
+let activeTab="today", selectedMonth=monthKey(new Date());
+function pad(n){return String(n).padStart(2,"0")}
+function key(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function monthKey(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}`}
+function parseKey(k){let [y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d)}
+function plDate(d){return new Intl.DateTimeFormat("pl-PL",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(d)}
+function hm(ts){return ts?new Date(ts).toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"}):"—"}
+function eligible(d){return [0,1,2,3,4].includes(d.getDay())}
+function save(){localStorage.setItem(STORE,JSON.stringify(records))}
+function status(r){
+ if(!r?.bed)return null;
+ let d=new Date(r.bed), mins=d.getHours()*60+d.getMinutes();
+ if(mins<21*60+45)return {label:"ON TIME",cls:"green"};
+ if(mins<=22*60+30)return {label:"DELAYED",cls:"orange"};
+ return {label:"DELAYED OVER 1 HOUR",cls:"red"};
+}
+function fmtMonth(m){let [y,n]=m.split("-").map(Number);return new Intl.DateTimeFormat("pl-PL",{month:"long",year:"numeric"}).format(new Date(y,n-1,1))}
+function dayRows(m){let [y,mo]=m.split("-").map(Number),days=new Date(y,mo,0).getDate(),a=[];for(let i=1;i<=days;i++){let d=new Date(y,mo-1,i);if(eligible(d))a.push({d,k:key(d),r:records[key(d)]||{}})}return a}
+function render(){
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===activeTab));
+ const root=document.getElementById("content");
+ if(activeTab==="today")root.innerHTML=todayHTML();
+ if(activeTab==="calendar")root.innerHTML=calendarHTML();
+ if(activeTab==="history")root.innerHTML=historyHTML();
+ if(activeTab==="stats")root.innerHTML=statsHTML();
+}
+function todayHTML(){
+ const d=new Date(),k=key(d),r=records[k]||{},ok=eligible(d),s=status(r);
+ return `<section class="panel">
+ <div class="datehead"><div><div class="muted">DAILY OVERVIEW</div><h2>${plDate(d)}</h2></div><span class="pill">${ok?"TRACKING DAY":"REST DAY"}</span></div>
+ ${!ok?'<div class="notice neutral">Piątek i sobota są wyłączone z monitorowania. Kolejny pomiar będzie dostępny w niedzielę.</div>':`
+ <div class="metrics">
+ <div class="metric"><label>PREPARATION PLAN</label><strong>${PREP_PLAN}</strong></div>
+ <div class="metric"><label>ESTIMATED BEDTIME</label><strong>${BED_PLAN}</strong></div>
+ <div class="metric"><label>ACTUAL BEDTIME</label><strong>${hm(r.bed)}</strong></div>
+ </div>
+ <h2>Today's timeline</h2><div class="muted">Zapisuj etapy jednym kliknięciem. Godziny są pobierane automatycznie z urządzenia.</div>
+ <div class="timeline">
+ <div class="event ${r.prep?'actual':''}"><i class="dot"></i><div class="time">${r.prep?hm(r.prep):PREP_PLAN}</div><div class="name">PREPARATION FOR SLEEP</div><div class="detail">${r.prep?'Actual preparation recorded':'Planned preparation time'}</div></div>
+ <div class="event ${r.bed?'actual':''}"><i class="dot"></i><div class="time">${r.bed?hm(r.bed):BED_PLAN}</div><div class="name">GOING TO SLEEP</div><div class="detail">${r.bed?'Actual bedtime recorded':'Estimated bedtime'}</div></div>
+ </div>
+ <div class="actions">
+ <button class="action" id="prepBtn" ${r.prep?'disabled':''}>${r.prep?'✓ PREPARATION RECORDED':'START PREPARATION'}</button>
+ <button class="action secondary" id="bedBtn" ${(!r.prep||r.bed)?'disabled':''}>${r.bed?'✓ BEDTIME RECORDED':'I AM GOING TO SLEEP'}</button>
+ </div>
+ ${s?`<div class="notice ${s.cls}">${s.label} · Actual bedtime: ${hm(r.bed)}</div>`:`<div class="notice neutral">STATUS: WAITING FOR BEDTIME RECORD</div>`}
+ <div class="controls" style="margin-top:14px"><button class="smallbtn" id="undoBtn" ${(!r.prep&&!r.bed)?'disabled':''}>↶ Undo last action</button><span class="muted">Anuluje ostatni zarejestrowany etap.</span></div>`}
+ </section>
+ <section class="panel"><h2>How it works</h2><div class="muted">1. Kliknij „Start preparation” w chwili rozpoczęcia wieczornej rutyny.<br>2. Kliknij „I am going to sleep” dokładnie wtedy, gdy kładziesz się spać.<br>3. Status i miesięczne statystyki uzupełnią się automatycznie.</div></section>`;
+}
+function calendarHTML(){
+ let [y,m]=selectedMonth.split("-").map(Number),first=new Date(y,m-1,1),total=new Date(y,m,0).getDate(),offset=first.getDay();
+ let cells=["Pon","Wt","Śr","Czw","Pt","Sob","Niedz"].map(x=>`<div class="calday head">${x}</div>`).join("");
+ // Monday-first offset
+ let off=(first.getDay()+6)%7;for(let i=0;i<off;i++)cells+='<div class="calday"></div>';
+ for(let i=1;i<=total;i++){let d=new Date(y,m-1,i),r=records[key(d)]||{},s=status(r),cls=s?s.cls:"";cells+=`<div class="calday">${i}${eligible(d)?`<i class="mark ${cls}"></i>`:''}</div>`}
+ return `<section class="panel"><div class="datehead"><div><div class="muted">MONTHLY VIEW</div><h2>Calendar</h2></div><input type="month" id="monthPick" value="${selectedMonth}"></div>
+ <div class="calendar">${cells}</div><div class="muted" style="margin-top:15px">Kolory oznaczają wynik zarejestrowanego pójścia spać. Kropka szara oznacza brak pomiaru. Piątki i soboty nie są dniami monitorowanymi.</div>
+ <div class="controls" style="margin-top:18px"><span class="status green">● ON TIME</span><span class="status orange">● DELAYED</span><span class="status red">● OVER 1 HOUR</span></div></section>`;
+}
+function historyHTML(){
+ let rows=dayRows(selectedMonth),filled=rows.filter(x=>x.r.prep||x.r.bed);
+ return `<section class="panel"><div class="datehead"><div><div class="muted">TRACKING RECORDS</div><h2>Monthly history</h2></div><input type="month" id="monthPick" value="${selectedMonth}"></div>
+ <div class="tablewrap"><table><thead><tr><th>DATE</th><th>PREPARATION · ACTUAL</th><th>ESTIMATED</th><th>BEDTIME · ACTUAL</th><th>STATUS</th></tr></thead><tbody>
+ ${filled.length?filled.map(x=>{let s=status(x.r);return `<tr><td>${pad(x.d.getDate())}.${pad(x.d.getMonth()+1)}.${x.d.getFullYear()}</td><td>${hm(x.r.prep)}</td><td>${BED_PLAN}</td><td>${hm(x.r.bed)}</td><td>${s?`<span class="status ${s.cls}">${s.label}</span>`:'<span class="status neutral">IN PROGRESS</span>'}</td></tr>`}).join(""):`<tr><td colspan="5" class="empty">Brak zarejestrowanych pomiarów w tym miesiącu.</td></tr>`}
+ </tbody></table></div></section>`;
+}
+function statsHTML(){
+ let rows=dayRows(selectedMonth),complete=rows.filter(x=>x.r.bed),ontime=complete.filter(x=>status(x.r).cls==="green"),delayed=complete.filter(x=>status(x.r).cls==="orange"),late=complete.filter(x=>status(x.r).cls==="red");
+ let avg="—";if(complete.length){let mins=complete.map(x=>{let d=new Date(x.r.bed);return d.getHours()*60+d.getMinutes()});let a=Math.round(mins.reduce((p,c)=>p+c,0)/mins.length);avg=`${pad(Math.floor(a/60))}:${pad(a%60)}`}
+ let pct=complete.length?Math.round(ontime.length/complete.length*100)+"%":"—";
+ return `<section class="panel"><div class="datehead"><div><div class="muted">PERFORMANCE OVERVIEW</div><h2>Statistics</h2></div><input type="month" id="monthPick" value="${selectedMonth}"></div>
+ <div class="stats" style="margin-top:18px">
+ <div class="stat"><span>RECORDED BEDTIMES</span><strong>${complete.length}/${rows.length}</strong><div class="muted">Days with bedtime</div></div>
+ <div class="stat"><span>ON TIME RATE</span><strong>${pct}</strong><div class="muted">${ontime.length} successful days</div></div>
+ <div class="stat"><span>AVERAGE BEDTIME</span><strong>${avg}</strong><div class="muted">Monthly average</div></div>
+ <div class="stat"><span>DELAYED</span><strong>${delayed.length}</strong><div class="muted">21:45–22:30</div></div>
+ <div class="stat"><span>OVER 1 HOUR</span><strong>${late.length}</strong><div class="muted">After 22:30</div></div>
+ <div class="stat"><span>PREPARATIONS</span><strong>${rows.filter(x=>x.r.prep).length}</strong><div class="muted">Recorded starts</div></div>
+ </div></section>
+ <section class="panel"><h2>Data backup</h2><div class="muted">Pobierz kopię wszystkich zapisanych pomiarów. Plik można zachować na komputerze lub przenieść na inne urządzenie.</div><div class="controls" style="margin-top:14px"><button class="smallbtn" id="exportBtn">↓ Export backup (JSON)</button><button class="smallbtn" id="importBtn">↑ Import backup</button><input type="file" id="importFile" accept="application/json" hidden></div></section>`;
+}
+document.addEventListener("click",e=>{
+ let b=e.target.closest("button");if(!b)return;
+ if(b.dataset.tab){activeTab=b.dataset.tab;render();return}
+ const k=key(new Date());let r=records[k]||{};
+ if(b.id==="prepBtn"&&!r.prep){r.prep=Date.now();records[k]=r;save();render()}
+ if(b.id==="bedBtn"&&r.prep&&!r.bed){r.bed=Date.now();records[k]=r;save();render()}
+ if(b.id==="undoBtn"){if(r.bed)delete r.bed;else if(r.prep)delete r.prep;if(!r.prep&&!r.bed)delete records[k];else records[k]=r;save();render()}
+ if(b.id==="exportBtn"){let blob=new Blob([JSON.stringify(records,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="sleep-tracker-backup.json";a.click();URL.revokeObjectURL(url)}
+ if(b.id==="importBtn")document.getElementById("importFile").click();
+});
+document.addEventListener("change",e=>{
+ if(e.target.id==="monthPick"){selectedMonth=e.target.value||monthKey(new Date());render()}
+ if(e.target.id==="importFile"&&e.target.files[0]){let f=e.target.files[0],reader=new FileReader();reader.onload=()=>{try{let x=JSON.parse(reader.result);if(!x||typeof x!=="object"||Array.isArray(x))throw 0;records=x;save();render();alert("Backup imported successfully.")}catch{alert("Nie udało się odczytać kopii zapasowej.")}};reader.readAsText(f)}
+});
+render();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+}
+</script>
+</body></html>

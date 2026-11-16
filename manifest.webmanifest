@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "Sleep Tracker",
+  "short_name": "Sleep Tracker",
+  "description": "Monitoruj przygotowanie do snu i rzeczywistą godzinę pójścia spać.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f8fc",
+  "theme_color": "#102b4e",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
